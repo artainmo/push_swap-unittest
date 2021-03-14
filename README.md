@@ -1,6 +1,4 @@
 # push_swap_tester
-Tester for 42 school project push_swap
-
 
 ### PREPARE
 
@@ -17,7 +15,7 @@ cat errors.txt
 ### LEAKS
 To test leaks you must have valgrind installed
 
-To install valgrind on mac with brew
+To install valgrind on mac with brew:
 ```
 make env_leaks_mac
 ```

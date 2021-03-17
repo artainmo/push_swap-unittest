@@ -83,7 +83,7 @@ leak_tests = [["LEAK: Sorted list", "leaks", "valgrind --leak-check=full --show-
 def verify(output, test_name, expected_result, cmd):
     print(test_name.ljust(100), end="")
     if isinstance(expected_result, int):
-        if int(output) <= expected_result:
+        if int(output) <= expected_result and int(output) != 0:
             correct = True
         else:
             correct = False

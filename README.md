@@ -9,6 +9,10 @@
 make
 ```
 
+```
+make leaks
+```
+
 ### SEE ERRORS
 cat errors.txt
 
@@ -19,6 +23,7 @@ To install valgrind on mac with brew:
 ```
 make env_leaks_mac
 ```
+### OTHER
 Install other dependencies
 ```
 make env

@@ -117,6 +117,7 @@ def test(test_name, test_expected_result, cmd):
     except:
         print(test_name)
         print("timout: infinite loop?")
+        print("Command:\n" + cmd)
         exit()
     if test_expected_result == "Error" or test_expected_result == "leaks":
         output = output[1]

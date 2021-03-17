@@ -1,4 +1,5 @@
 import subprocess
+import sys
 import os
 import random
 from termcolor import colored
@@ -73,10 +74,10 @@ push_swap_tests = [["Sorted list", "", p_exec + "42"],
                    ["Advanced random 3 lines", 5300, p_exec + r500list3 + " | wc -l"],
                    ["Advanced random 3 ok/ko", "OK\n", p_exec + r500list3 + " | " + c_exec + r500list3]]
 
-leak_tests = [["LEAK: Sorted list", "leaks", "valgrind --leak-check=full " + p_exec + "42"],
-             ["LEAK: Duplicate numerical", "leaks", "valgrind --leak-check=full " + c_exec + "1 2 1"],
-             ["LEAK: Non-existent command", "leaks", "valgrind --leak-check=full " +  "echo 'wq' | " + c_exec + "1 2"],
-             ["LEAK: Simple random 3 ok/ko", "leaks", "valgrind --leak-check=full " + p_exec + r5list3 + " | " + c_exec + r5list3]]
+leak_tests = [["LEAK: Sorted list", "leaks", "valgrind --leak-check=full --show-leak-kinds=all " + p_exec + "42"],
+             ["LEAK: Duplicate numerical", "leaks", "valgrind --leak-check=full --show-leak-kinds=all " + c_exec + "1 2 1"],
+             ["LEAK: Non-existent command", "leaks", "valgrind --leak-check=full --show-leak-kinds=all " +  "echo 'wq' | " + c_exec + "1 2"],
+             ["LEAK: Simple random 3 ok/ko", "leaks", "valgrind --leak-check=full --show-leak-kinds=all " + p_exec + r5list3 + " | " + c_exec + r5list3]]
 
 
 def verify(output, test_name, expected_result, cmd):
@@ -130,8 +131,9 @@ if __name__=="__main__":
     print(colored("\nPUSH_SWAP TESTS", "yellow"))
     for t in push_swap_tests:
         test(t[0], t[1], t[2])
-    print(colored("\nLEAK TEST", "yellow"))
-    print("Make sure to have valgrind installed")
-    for t in leak_tests:
-        test(t[0], t[1], t[2])   
+    if len(sys.argv) > 1 and sys.argv[1] == "leaks":
+        print(colored("\nLEAK TEST", "yellow"))
+        print("Make sure to have valgrind installed")
+        for t in leak_tests:
+            test(t[0], t[1], t[2])   
 

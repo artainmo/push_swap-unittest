@@ -19,3 +19,8 @@ To install valgrind on mac with brew:
 ```
 make env_leaks_mac
 ```
+Install other dependencies
+```
+make env
+```
+

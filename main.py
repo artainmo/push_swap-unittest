@@ -24,13 +24,13 @@ def random_int_list(lenght):
     return random_list
 
 #name - expected output - command
-checker_tests = [["Non-numerical input", "Error\n", c_exec + "a b c"],      
-                 ["Duplicate numerical", "Error\n", c_exec + "1 2 1"],
-                 ["Higher max int", "Error\n", c_exec + "1 2 2147483649"],
-                 ["Lower min int", "Error\n", c_exec + "-2147483649 1 2"],
+checker_tests = [["Non-numerical input", "Error", c_exec + "a b c"],      
+                 ["Duplicate numerical", "Error", c_exec + "1 2 1"],
+                 ["Higher max int", "Error", c_exec + "1 2 2147483649"],
+                 ["Lower min int", "Error", c_exec + "-2147483649 1 2"],
                  ["Empty", "", c_exec],
-                 ["Non-existent command", "Error\n",  "echo 'wq' | " + c_exec + "1 2"],
-                 ["Non-existent command spaces", "Error\n", "echo 'sa ' | " + c_exec + "1 2"],
+                 ["Non-existent command", "Error",  "echo 'wq' | " + c_exec + "1 2"],
+                 ["Non-existent command spaces", "Error", "echo 'sa ' | " + c_exec + "1 2"],
                  ["Existent command KO", "KO\n", "echo 'sa\npb\nrrr' | " + c_exec + "0 9 1 8 2 7 3 6 4 5"],
                  ["Existent command KO", "KO\n", "echo 'sb\npa\nrr' | " + c_exec + "0 9 1 8 2 7 3 6 4 5"],
                  ["Operations no segfault", "KO\n", "echo 'pa\npa\npb\nsb\nrb\nrrb\npb\nra\nrb' | " + c_exec + "0 9 1 8 2 7"],
@@ -92,6 +92,11 @@ def verify(output, test_name, expected_result, cmd):
             correct = True
         else:
             correct = False
+    elif expected_result == "Error":
+        if output.strip("\n") == "Error":
+            correct = True
+        else:
+            correct = False
     elif output == expected_result:
         correct = True
     else:
@@ -113,7 +118,7 @@ def test(test_name, test_expected_result, cmd):
         print(test_name)
         print("timout: infinite loop?")
         exit()
-    if test_expected_result == "Error\n" or test_expected_result == "leaks":
+    if test_expected_result == "Error" or test_expected_result == "leaks":
         output = output[1]
     else:
         output = output[0]

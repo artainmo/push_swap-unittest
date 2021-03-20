@@ -51,27 +51,27 @@ r500list3 = random_int_list(500)
 push_swap_tests = [["Sorted list", "", p_exec + "42"],
                    ["Sorted list", "", p_exec + "-15 0 1 2 3"],
                    ["Sorted list", "", p_exec + "0 1 2 3 4 5 6 7 8"],
-                   ["Simple test lines", 3, p_exec + "2 1 0 | wc -l"],
+                   ["Simple test lines", [3, 0], p_exec + "2 1 0 | wc -l"],
                    ["Simple test ok/ko", "OK\n", p_exec + "2 1 0 | " + c_exec + "2 1 0"],
-                   ["Simple test 2 lines", 12, p_exec + "1 5 2 4 3 | wc -l"],
+                   ["Simple test 2 lines", [12, 0], p_exec + "1 5 2 4 3 | wc -l"],
                    ["Simple test 2 ok/ko", "OK\n", p_exec + "1 5 2 4 3 | " + c_exec + "1 5 2 4 3"],
-                   ["Simple random 1 lines", 12, p_exec + r5list1 + " | wc -l"],
+                   ["Simple random 1 lines", [12, 0], p_exec + r5list1 + " | wc -l"],
                    ["Simple random 1 ok/ko", "OK\n", p_exec + r5list1 + " | " + c_exec + r5list1],
-                   ["Simple random 2 lines", 12, p_exec + r5list2 + " | wc -l"],
+                   ["Simple random 2 lines", [12, 0], p_exec + r5list2 + " | wc -l"],
                    ["Simple random 2 ok/ko", "OK\n", p_exec + r5list2 + " | " + c_exec + r5list2],
-                   ["Simple random 3 lines", 12, p_exec + r5list3 + " | wc -l"],
+                   ["Simple random 3 lines", [12, 0], p_exec + r5list3 + " | wc -l"],
                    ["Simple random 3 ok/ko", "OK\n", p_exec + r5list3 + " | " + c_exec + r5list3],
-                   ["Medium random 1 lines", 700, p_exec + r100list1 + " | wc -l"],
+                   ["Medium random 1 lines", [700, 1500], p_exec + r100list1 + " | wc -l"],
                    ["Medium random 1 ok/ko", "OK\n", p_exec + r100list1 + " | " + c_exec + r100list1],
-                   ["Medium random 2 lines", 700, p_exec + r100list2 + " | wc -l"],
+                   ["Medium random 2 lines", [700, 1500], p_exec + r100list2 + " | wc -l"],
                    ["Medium random 2 ok/ko", "OK\n", p_exec + r100list2 + " | " + c_exec + r100list2],
-                   ["Medium random 3 lines", 700, p_exec + r100list3 + " | wc -l"],
+                   ["Medium random 3 lines", [700, 1500], p_exec + r100list3 + " | wc -l"],
                    ["Medium random 3 ok/ko", "OK\n", p_exec + r100list3 + " | " + c_exec + r100list3],
-                   ["Advanced random 1 lines", 5300, p_exec + r500list1 + " | wc -l"],
+                   ["Advanced random 1 lines", [5500, 11500], p_exec + r500list1 + " | wc -l"],
                    ["Advanced random 1 ok/ko", "OK\n", p_exec + r500list1 + " | " + c_exec + r500list1],
-                   ["Advanced random 2 lines", 5300, p_exec + r500list2 + " | wc -l"],
+                   ["Advanced random 2 lines", [5500, 11500], p_exec + r500list2 + " | wc -l"],
                    ["Advanced random 2 ok/ko", "OK\n", p_exec + r500list2 + " | " + c_exec + r500list2],
-                   ["Advanced random 3 lines", 5300, p_exec + r500list3 + " | wc -l"],
+                   ["Advanced random 3 lines", [5500, 11500], p_exec + r500list3 + " | wc -l"],
                    ["Advanced random 3 ok/ko", "OK\n", p_exec + r500list3 + " | " + c_exec + r500list3]]
 
 leak_tests = [["LEAK: Sorted list", "leaks", "valgrind --leak-check=full --show-leak-kinds=all " + p_exec + "42"],
@@ -82,9 +82,13 @@ leak_tests = [["LEAK: Sorted list", "leaks", "valgrind --leak-check=full --show-
 
 def verify(output, test_name, expected_result, cmd):
     print(test_name.ljust(100), end="")
-    if isinstance(expected_result, int):
-        if int(output) <= expected_result and int(output) != 0:
+    err_color = "red"
+    if isinstance(expected_result, list):
+        if int(output) <= expected_result[0] and int(output) != 0:
             correct = True
+        elif int(output) <= expected_result[1] and int(output) != 0:
+            correct = False
+            err_color = "yellow"
         else:
             correct = False
     elif expected_result == "leaks":
@@ -104,7 +108,7 @@ def verify(output, test_name, expected_result, cmd):
     if correct == True:
         print(colored("<>", "green"))
     else:
-        print(colored("<>", "red"))
+        print(colored("<>", err_color))
         with open("errors.txt", "a+") as fd:
             fd.write("TEST: " + test_name + " " + cmd  + "\n")
             fd.write("YOU: " + output + "\n")

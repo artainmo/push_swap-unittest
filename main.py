@@ -110,6 +110,9 @@ def verify(output, test_name, expected_result, cmd):
     else:
         print(colored("<>", err_color))
         with open("errors.txt", "a+") as fd:
+            if isinstance(expected_result, list):
+                if int(output) == 0:
+                    fd.write("NOTE: if already ordered not really wrong else error occured during program execution\n")
             fd.write("TEST: " + test_name + " " + cmd  + "\n")
             fd.write("YOU: " + output + "\n")
             fd.write("EXPECTED: " + str(expected_result) + "\n============================================================\n\n")
@@ -117,7 +120,7 @@ def verify(output, test_name, expected_result, cmd):
 def test(test_name, test_expected_result, cmd):
     try:
         output = subprocess.Popen(cmd, shell=True, encoding="utf-8", stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output = output.communicate(timeout=20)
+        output = output.communicate(timeout=400)
     except:
         print(test_name)
         print("timout: infinite loop?")

@@ -74,11 +74,12 @@ push_swap_tests = [["Sorted list", "", p_exec + "42"],
                    ["Advanced random 3 lines", [5500, 11500], p_exec + r500list3 + " | wc -l"],
                    ["Advanced random 3 ok/ko", "OK\n", p_exec + r500list3 + " | " + c_exec + r500list3]]
 
-leak_tests = [["LEAK: Sorted list", "leaks", "valgrind --leak-check=full --show-leak-kinds=all " + p_exec + "42"],
-             ["LEAK: Duplicate numerical", "leaks", "valgrind --leak-check=full --show-leak-kinds=all " + c_exec + "1 2 1"],
-             ["LEAK: Non-existent command", "leaks", "valgrind --leak-check=full --show-leak-kinds=all " +  "echo 'wq' | " + c_exec + "1 2"],
-             ["LEAK: Simple random 3 ok/ko", "leaks", "valgrind --leak-check=full --show-leak-kinds=all " + p_exec + r5list3 + " | " + c_exec + r5list3]]
-
+leak_tests = [["LEAK TEST: Sorted list", "leaks", "valgrind --leak-check=full --show-leak-kinds=all " + p_exec + "42"],
+             ["LEAK TEST: Duplicate numerical", "leaks", "valgrind --leak-check=full --show-leak-kinds=all " + c_exec + "1 2 1"],
+             ["LEAK TEST: Non-existent command", "leaks", "valgrind --leak-check=full --show-leak-kinds=all " +  "echo 'wq' | " + c_exec + "1 2"],
+             ["LEAK TEST: Simple random 3 ok/ko", "leaks", "valgrind --leak-check=full --show-leak-kinds=all " + p_exec + r5list3 + " | " + c_exec + r5list3],
+             ["LEAK TEST: Medium random 1 lines", "leaks", "valgrind --leak-check=full --show-leak-kinds=all " + p_exec + r100list1],
+             ["LEAK TEST: Advanced random 3 ok/ko", "leaks", "valgrind --leak-check=full --show-leak-kinds=all " + p_exec + r500list3 + " | " + c_exec + r500list3]]
 
 def verify(output, test_name, expected_result, cmd):
     print(test_name.ljust(100), end="")
@@ -138,15 +139,16 @@ if __name__=="__main__":
     except:
         pass
     os.system("clear")
+    if len(sys.argv) > 1 and sys.argv[1] == "leaks":
+        print(colored("LEAK TEST", "yellow"))
+        print("Make sure to have valgrind installed")
+        for t in leak_tests:
+            test(t[0], t[1], t[2])   
+        exit()
     print(colored("CHECKER TESTS", "yellow"))
     for t in checker_tests:
         test(t[0], t[1], t[2])
     print(colored("\nPUSH_SWAP TESTS", "yellow"))
     for t in push_swap_tests:
         test(t[0], t[1], t[2])
-    if len(sys.argv) > 1 and sys.argv[1] == "leaks":
-        print(colored("\nLEAK TEST", "yellow"))
-        print("Make sure to have valgrind installed")
-        for t in leak_tests:
-            test(t[0], t[1], t[2])   
-
+    

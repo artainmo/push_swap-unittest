@@ -120,7 +120,7 @@ def verify(output, test_name, expected_result, cmd):
 def test(test_name, test_expected_result, cmd):
     try:
         output = subprocess.Popen(cmd, shell=True, encoding="utf-8", stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output = output.communicate(timeout=400)
+        output = output.communicate(timeout=60)
     except:
         print(test_name)
         print("timout: infinite loop?")

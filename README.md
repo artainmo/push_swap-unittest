@@ -1,4 +1,6 @@
-# push_swap_tester
+# push_swap-unittest
+
+A unit-test for 42 school's [push_swap](https://github.com/artainmo/push_swap) project, being an algorithm project consisting of optimized data sorting with quicksort or other algorithm.
 
 ### PREPARE
 
